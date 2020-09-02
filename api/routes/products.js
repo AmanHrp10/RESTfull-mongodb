@@ -114,8 +114,17 @@ router.delete('/:productId', (req, res, next) => {
     .then(result => {
         console.log(result);
         res.status(200).json({
-            id : id,
-            action : result
+            message : 'Data product was deleted',
+            result : {
+                body : {
+                    name : 'Name',
+                    age : 'Age',
+                },
+                request : {
+                    methods : 'POST',
+                    url : 'http://localhost:3000/product/'
+                }
+            }
         })
     })
     .catch(err => console.log(err))
