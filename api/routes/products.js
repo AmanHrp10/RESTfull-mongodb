@@ -39,17 +39,24 @@ router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
 
     Product.findById(id)
+    .select('name age _id')
     .exec()
     .then(doc=> {
         console.log(doc);
-
         if(doc){
             res.status(200).json({
                 message : 'data was fetched',
-                dataProduct : doc
+                dataProduct : {
+                    name : doc.name,
+                    age: doc.age,
+                    request : {
+                        method: 'GET',
+                        url: 'http://localhost:3000/product/'
+                    }
+                }
             })
         }else{
-            res.status(404).json({message : 'No valid entry found for provided ID'})
+            res.status(404).json({message : 'Product ID not found'})
         }
     })
     .catch(err=>{
@@ -101,7 +108,8 @@ router.patch('/:productId', (req, res, next) => {
     .then(result =>{
         console.log(result);
         res.status(200).json({
-            action : result   
+            message: 'Data updated',
+            product : result   
     })
     .catch(err => console.log(err))
     })
@@ -117,8 +125,8 @@ router.delete('/:productId', (req, res, next) => {
             message : 'Data product was deleted',
             result : {
                 body : {
-                    name : 'Name',
-                    age : 'Age',
+                    name : 'String',
+                    age : 'Number',
                 },
                 request : {
                     methods : 'POST',
