@@ -6,6 +6,7 @@ const db = require('./config/mongodb').mongoURI
 const mongoose = require('mongoose');
 
 const productRouter = require('./api/routes/products');
+const orderRouter = require('./api/routes/order');
 
 // connect to database
 
@@ -19,11 +20,13 @@ const productRouter = require('./api/routes/products');
 
 
 app.use(morgan('dev'));
+app.use('/Uploads', express.static('Uploads'))
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 // routes
 app.use('/product', productRouter);
+app.use('/order', orderRouter);
 
 // error handling
 
