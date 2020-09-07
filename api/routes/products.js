@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
+const checkAuth = require('../middleware/check-auth');
+
 
 
 // menentukan penyimpanan
@@ -34,7 +36,7 @@ const upload = multer({
 
 const Product = require('../models/Products')
 
-router.get('/', (req, res, next) => {
+router.get('/',checkAuth,(req, res, next) => {
     Product.find()
     .select('name age _id productImage')
     .exec()
@@ -66,7 +68,7 @@ router.get('/', (req, res, next) => {
     })  
 })
 
-router.get('/:productId', (req, res, next) => {
+router.get('/:productId', checkAuth, (req, res, next) => {
     const id = req.params.productId;
 
     Product.findById(id)
@@ -98,7 +100,7 @@ router.get('/:productId', (req, res, next) => {
     })
 })
 
-router.post('/',upload.single('productImage'),(req, res) => {
+router.post('/', checkAuth, upload.single('productImage'), (req, res) => {
     console.log(req.file)
     const product = new Product({
         name: req.body.name,
@@ -128,7 +130,7 @@ router.post('/',upload.single('productImage'),(req, res) => {
         })
     });
 
-router.patch('/:productId', (req, res, next) => {
+router.patch('/:productId', checkAuth, (req, res, next) => {
     const id = req.params.productId
 
     const updateOps = {}
@@ -148,7 +150,7 @@ router.patch('/:productId', (req, res, next) => {
     })
 })
 
-router.delete('/:productId', (req, res, next) => {
+router.delete('/:productId', checkAuth, (req, res, next) => {
     const id = req.params.productId
     Product.remove({ _id : id})
     .exec()
