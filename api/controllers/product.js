@@ -1,42 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-const multer = require('multer');
-const checkAuth = require('../middleware/check-auth');
-
-
-
-// menentukan penyimpanan
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'Uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, new Date().toISOString() + file.originalname);
-    }
-})
-
-const fileFilter = (req, file, cb) => {
-
-    //* extention file yang di izinkan
-    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
-        cb(null, true);
-    }else{
-        cb(null, false);
-    }
-}
-
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5
-    },
-    fileFilter: fileFilter
-})
-
 const Product = require('../models/Products')
 
-router.get('/',checkAuth,(req, res, next) => {
+exports.get_all_product = (req, res, next) => {
     Product.find()
     .select('name age _id productImage')
     .exec()
@@ -66,9 +30,9 @@ router.get('/',checkAuth,(req, res, next) => {
             error : err
         })
     })  
-})
+}
 
-router.get('/:productId', checkAuth, (req, res, next) => {
+exports.get_product = (req, res, next) => {
     const id = req.params.productId;
 
     Product.findById(id)
@@ -98,9 +62,9 @@ router.get('/:productId', checkAuth, (req, res, next) => {
             error : err
         })
     })
-})
+}
 
-router.post('/', checkAuth, upload.single('productImage'), (req, res) => {
+exports.product_create = (req, res) => {
     console.log(req.file)
     const product = new Product({
         name: req.body.name,
@@ -128,9 +92,9 @@ router.post('/', checkAuth, upload.single('productImage'), (req, res) => {
                 error :err
             });
         })
-    });
+    }
 
-router.patch('/:productId', checkAuth, (req, res, next) => {
+exports.product_update = (req, res, next) => {
     const id = req.params.productId
 
     const updateOps = {}
@@ -148,9 +112,9 @@ router.patch('/:productId', checkAuth, (req, res, next) => {
     })
     .catch(err => console.log(err))
     })
-})
+}
 
-router.delete('/:productId', checkAuth, (req, res, next) => {
+exports.product_delete = (req, res, next) => {
     const id = req.params.productId
     Product.remove({ _id : id})
     .exec()
@@ -174,6 +138,4 @@ router.delete('/:productId', checkAuth, (req, res, next) => {
             error: err
         })
     })
-})
-
-module.exports = router
+}

@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const db = require('./config/mongodb').mongoURI
 const mongoose = require('mongoose');
 
-const productRouter = require('./api/routes/products');
+const productRouter = require('./api/routes/product');
 const orderRouter = require('./api/routes/order');
 const userRouter = require('./api/routes/user');
 
