@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongo
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - mongo-express-networks
+    expose:
+      - 27017
+  mongo-express:
+    build: .
+    container_name: mongo-express-container
+    networks:
+      - mongo-express-networks
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT} #set port from env variable
+    environment:
+      WAIT_HOST: mongo:27017
+    #   ports: ${PORT}
+    volumes:
+      - .:/app
+networks:
+  mongo-express-networks:
+volumes:
+  mongodb-data:
