@@ -1,3 +1,5 @@
 module.exports = {
-    mongoURI : 'mongodb://127.0.0.1:27017'
-}
+    mongoURI: 'mongodb://mongo:27017/test',
+//   mongoURI:
+//     'mongodb+srv://harahap:<password>@learn-mongo.7yzie.mongodb.net/<name>?retryWrites=true&w=majority',
+};
